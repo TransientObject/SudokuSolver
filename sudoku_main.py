@@ -1,6 +1,7 @@
 import math
 import time
 import sys
+import collections
 
 row_col_headers = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -155,14 +156,24 @@ class SudokuCSP(SudokuMain):
             d2 = remaining_values[s]
             if not all(self.cons_prop(remaining_values, s2, d2) for s2 in self.peers[s]):
                 return False
+        elif len(remaining_values[s]) == 2:
+            for u in self.cell_to_units_mapping[s]:
+                d2 = remaining_values[s]
+                possible_twins = [s for s in u if remaining_values[s] == d2]
+                if len(possible_twins) >= 2:
+                    other_squares_this_unit = [s for s in u if not s in possible_twins]
+                    for char in d2:
+                        if not all(self.cons_prop(remaining_values, s2, char) for s2 in other_squares_this_unit):
+                            return False
+
         # In a unit, if there is only one square for a value, we put the value into this square and do propagation to
         # its peers according to the above strategy.
         for u in self.cell_to_units_mapping[s]:
             possible_places = [s for s in u if d in remaining_values[s]]
-        if len(possible_places) == 0:
-            return False
-        elif len(possible_places) == 1:
-            # d can only be in one place in unit; assign it there
+            if len(possible_places) == 0:
+                return False
+            elif len(possible_places) == 1:
+                # d can only be in one place in unit; assign it there
                 if not self.assign(remaining_values, possible_places[0], d):
                     return False
         return remaining_values
@@ -190,8 +201,7 @@ class SudokuCSP(SudokuMain):
         if all(len(remaining_values[s]) == 1 for s in self.cells):
             return remaining_values
         else:
-            print("The puzzle can't be solved using only current CSP strategies.")
-
+            return false
 # end region CSP
 
 if __name__=="__main__":
@@ -211,12 +221,17 @@ if __name__=="__main__":
         sudoku.display(goal)
     elif(sys.argv[1] == 'b'):
         sudoku = SudokuCSP(int(math.sqrt(len(start_state))))
-        goal = sudoku.csp_solve(sys.argv[2])
-        print(goal)
-        sudoku.display(goal)
+        result = sudoku.csp_solve(sys.argv[2])
+        if result:
+            goal = (collections.OrderedDict(sorted(result.items()))).values()
+            print(goal)
+            sudoku.display(goal)
+        else:
+            print("The puzzle can't be solved using only current CSP strategies.")
     elif(sys.argv[1] == 'c'):
         sudoku = SudokuCSP(int(math.sqrt(len(start_state))))
-        goal = sudoku.csp_dfs_solve(sys.argv[2])
+        result = sudoku.csp_dfs_solve(sys.argv[2])
+        goal = (collections.OrderedDict(sorted(result.items()))).values()
         print(goal)
         sudoku.display(goal)
     else:
