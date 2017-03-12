@@ -43,7 +43,7 @@ class SudokuMain():
         for value in values:
             line += value
             if (i % 27 == 0):
-                print(line + "\n------------+---------------+------------")
+                print(line + "\n--------------------+-----------------------+---------------------")
                 line = ""
             elif (i % 9 == 0):
                 print(line + "\n")
@@ -217,7 +217,6 @@ if __name__=="__main__":
     if (sys.argv[1] == 'a'):
         sudoku = SudokuCSPOptimized(int(math.sqrt(len(start_state))))
         goal = sudoku.solve(sys.argv[2])
-        print(goal)
         sudoku.display(goal)
     elif(sys.argv[1] == 'b'):
         sudoku = SudokuCSP(int(math.sqrt(len(start_state))))
