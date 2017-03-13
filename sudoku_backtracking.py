@@ -1,7 +1,7 @@
 from sudoku_base import *
 
 class SudokuBackTracking(SudokuBase):
-    def __init__(self,n, current_state):
+    def __init__(self,n, start_state):
         SudokuBase.__init__(self,n)
         self.possible_values = dict(zip(self.cells,start_state))
 
@@ -29,6 +29,6 @@ class SudokuBackTracking(SudokuBase):
                 self.possible_values[empty_cell] = str(num)
                 if (self.solve_sudoku()):
                     return True
-
                 self.possible_values[empty_cell] = '0'
+
         return False
