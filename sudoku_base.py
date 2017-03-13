@@ -43,7 +43,7 @@ class SudokuBase():
         for value in values:
             line += value
             if (i % 27 == 0):
-                print(line + "\n--------------------+-----------------------+---------------------")
+                print(line + "\n------------+---------------+-------------")
                 line = ""
             elif (i % 9 == 0):
                 print(line + "\n")

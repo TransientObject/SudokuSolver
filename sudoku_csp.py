@@ -91,4 +91,4 @@ class SudokuCSP(SudokuBase):
         if all(len(remaining_values[s]) == 1 for s in self.cells):
             return remaining_values
         else:
-            return false
+            return False
