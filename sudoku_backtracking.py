@@ -1,4 +1,5 @@
 from sudoku_base import *
+from memory_profiler import profile
 
 class SudokuBackTracking(SudokuBase):
     def __init__(self,n, start_state):
